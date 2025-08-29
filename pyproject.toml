@@ -1,0 +1,17 @@
+[project]
+name = "ac-assistant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "black>=25.1.0",
+    "dependency-injector>=4.48.1",
+    "flask>=3.1.2",
+    "numpy>=2.3.2",
+    "openai>=1.102.0",
+    "pandas>=2.3.2",
+    "pytest>=8.4.1",
+    "pytest-mock>=3.14.1",
+    "python-dotenv>=1.1.1",
+]
