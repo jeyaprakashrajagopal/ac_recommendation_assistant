@@ -8,23 +8,22 @@ class StageThreeResult:
     response: str
 
 
-class ProductRecommendatations:
+class ProductRecommendations:
     def __init__(self, chat_model: ChatModel, system_message: str):
         self.__chat_model = chat_model
         self.system_message = system_message
-        self.messages = []
 
     def run(self) -> StageThreeResult:
-        recommendation = self.__chat_model.preview_response(messages=self.messages)
+        recommendation = self.__chat_model.get_session_response()
         return StageThreeResult(response=recommendation)
 
     def continue_run(self) -> StageThreeResult:
-        response = self.__chat_model.preview_response(messages=self.messages)
+        response = self.__chat_model.get_session_response()
 
         return StageThreeResult(response=response)
 
     def add_message(self, role, content):
-        self.messages.append({"role": role, "content": content})
+        self.__chat_model.add_message(role, content)
 
     def clear_messages(self):
         self.__chat_model.clear_messages()

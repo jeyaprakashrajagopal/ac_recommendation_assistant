@@ -5,7 +5,7 @@ from src.pipeline.pipeline import Pipeline
 from src.stages.stage0_initialize_conversation import IntializeConversation
 from src.stages.stage1_intent_confirmation import IntentClarityAndConfirmation
 from src.stages.stage2_product_extraction import ProductExtractionAndMapping
-from src.stages.stage3_product_recommendation import ProductRecommendatations
+from src.stages.stage3_product_recommendation import ProductRecommendations
 from src.utils.templating import (load_dictionary_from_md,
                                   load_system_message_without_params)
 
@@ -52,7 +52,7 @@ class StagesContainer:
             STAGE3_SYSTEM_MESSAGE
         )
         self.stage3 = providers.Factory(
-            ProductRecommendatations,
+            ProductRecommendations,
             chat_model=chat_model,
             system_message=stage3_system_message,
         )

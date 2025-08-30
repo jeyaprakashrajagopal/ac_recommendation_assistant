@@ -51,6 +51,7 @@ def invite():
 
         if top_products == None:
             stage1_response = application.pipeline.run_stage1(user_input=user_input)
+
             if stage1_response.intent_confirmation.strip().lower() == "yes":
                 # stage 2
                 stage_2_response = application.pipeline.run_stage2(
@@ -68,7 +69,6 @@ def invite():
                 stage3_response = application.pipeline.run_stage3(
                     recommendations=stage_2_response.recommendations
                 )
-
                 conversation.append({"assistant": "\n".join(stage3_response.response)})
             else:
                 conversation.append({"assistant": stage1_response.response})

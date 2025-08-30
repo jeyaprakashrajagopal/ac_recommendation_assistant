@@ -4,7 +4,9 @@ from typing import Dict, List
 
 class ChatModel(ABC):
     @abstractmethod
-    def get_session_response(self, json_format: bool, tools: Dict = None) -> List[str]:
+    def get_session_response(
+        self, json_format: bool = False, tools: Dict = None, tool_choice=None
+    ) -> List[str]:
         """
         Return the response using the accumulated session and it returns the assistant's reply to the user input.
 
@@ -15,7 +17,7 @@ class ChatModel(ABC):
 
     @abstractmethod
     def preview_response(
-        self, messages: List[Dict], json_format: bool
+        self, messages: List[Dict], json_format: bool = False
     ) -> List[str | Dict]:
         """
         Stateless, one-time request from the given messages.

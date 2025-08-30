@@ -8,7 +8,7 @@ Here are the instructions to extract the key value pairs from the dictionary
 ####
 
 ####
-Here is the example of input and output pairs for the task in hand
+Here are the examples of input and output pairs for the task in hand
 **Example 1**
 input:
 Your requirements are converted into the following 

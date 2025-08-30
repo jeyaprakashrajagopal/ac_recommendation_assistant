@@ -5,7 +5,7 @@ from src.stages.stage1_intent_confirmation import (
     IntentClarityAndConfirmation, StageOneResult)
 from src.stages.stage2_product_extraction import (ProductExtractionAndMapping,
                                                   StageTwoResult)
-from src.stages.stage3_product_recommendation import (ProductRecommendatations,
+from src.stages.stage3_product_recommendation import (ProductRecommendations,
                                                       StageThreeResult)
 from src.utils.ModerationException import ModerationException
 
@@ -17,7 +17,7 @@ class Pipeline:
         stage0: IntializeConversation,
         stage1: IntentClarityAndConfirmation,
         stage2: ProductExtractionAndMapping,
-        stage3: ProductRecommendatations,
+        stage3: ProductRecommendations,
     ):
         self.__moderation_client = moderation_client
         self.__stage0 = stage0
