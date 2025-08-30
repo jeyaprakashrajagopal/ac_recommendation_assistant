@@ -1,12 +1,20 @@
 from src.model.interfaces.moderation_interface import Moderation
-from src.stages.stage0_initialize_conversation import (IntializeConversation,
-                                                       StageZeroResult)
+from src.stages.stage0_initialize_conversation import (
+    IntializeConversation,
+    StageZeroResult,
+)
 from src.stages.stage1_intent_confirmation import (
-    IntentClarityAndConfirmation, StageOneResult)
-from src.stages.stage2_product_extraction import (ProductExtractionAndMapping,
-                                                  StageTwoResult)
-from src.stages.stage3_product_recommendation import (ProductRecommendations,
-                                                      StageThreeResult)
+    IntentClarityAndConfirmation,
+    StageOneResult,
+)
+from src.stages.stage2_product_extraction import (
+    ProductExtractionAndMapping,
+    StageTwoResult,
+)
+from src.stages.stage3_product_recommendation import (
+    ProductRecommendations,
+    StageThreeResult,
+)
 from src.utils.ModerationException import ModerationException
 
 
