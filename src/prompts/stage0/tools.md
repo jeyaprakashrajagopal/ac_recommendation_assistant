@@ -12,7 +12,7 @@
                 },
                 "cooling capacity": {
                     "type": "string",
-                    "description": "AC's cooling capacity as provided e.g., '1.5 tons capacity', '1.5', '1.5 ton'; Return '-' for any field that is not stated.", 
+                    "description": "Two possible inputs here 1. AC's cooling capacity as provided e.g., '1.5 tons capacity', '1.5', '1.5 ton', 2. if room size is given, please convert it to tons e.g., '550 square feet' is approximately equal to '1 ton'; Return '-' for any field that is not stated.", 
                 },
                 "energy efficiency": {
                     "type": "string",

@@ -2,6 +2,7 @@ import json
 from typing import Dict, List, final
 
 from openai import OpenAI
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 from src.model.interfaces.chat_model_interface import ChatModel
 
@@ -24,6 +25,7 @@ class OpenAIChatModel(ChatModel):
         self.__seed = seed
         self.__messages = []
 
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
     def preview_response(
         self, messages: List[Dict], json_format=False, json_schema=None
     ) -> List[str | Dict]:
@@ -51,6 +53,7 @@ class OpenAIChatModel(ChatModel):
         else:
             return [choice.message.content for choice in response.choices]
 
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
     def get_session_response(
         self, json_format=False, json_schema=None, tools=None, tool_choice: Dict = None
     ) -> List[str]:
