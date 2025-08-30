@@ -2,9 +2,6 @@ from dependency_injector import providers
 
 from src.model.implementation.moderation_model import ModerationModel
 from src.model.implementation.openai_chat_model import OpenAIChatModel
-from src.model.implementation.openai_chat_session import OpenAIChatSession
-from src.model.implementation.openai_completion_model import \
-    OpenAICompletionModel
 
 
 class ModelContainer:
@@ -24,12 +21,5 @@ class ModelContainer:
         }
 
         self.chat_model = providers.Singleton(OpenAIChatModel, **common_kwargs)
-
-        self.chat_session = providers.Singleton(OpenAIChatSession, **common_kwargs)
-
-        common_kwargs["model"] = "gpt-3.5-turbo-instruct"
-        self.text_completion_model = providers.Factory(
-            OpenAICompletionModel, **common_kwargs
-        )
 
         self.moderation_model = providers.Factory(ModerationModel)
