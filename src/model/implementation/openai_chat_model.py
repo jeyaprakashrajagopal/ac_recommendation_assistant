@@ -109,6 +109,9 @@ class OpenAIChatModel(ChatModel):
     def clear_messages(self):
         self.__messages = []
 
+    def get_messages(self):
+        return self.__messages
+
     def update_parameters(
         self,
         max_tokens: int = 100,

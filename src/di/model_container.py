@@ -20,6 +20,9 @@ class ModelContainer:
             "seed": config.no_of_choices() or __SEED,
         }
 
-        self.chat_model = providers.Singleton(OpenAIChatModel, **common_kwargs)
-
+        # Shared chat model is used on both stage 0 (initialize conversation) and stage 1
+        self.shared_chat_model = providers.Singleton(OpenAIChatModel, **common_kwargs)
+        # Independent chat model is used on both stage 2 and stage 3
+        self.stage2_chat_model = providers.Factory(OpenAIChatModel, **common_kwargs)
+        self.stage3_chat_model = providers.Factory(OpenAIChatModel, **common_kwargs)
         self.moderation_model = providers.Factory(ModerationModel)

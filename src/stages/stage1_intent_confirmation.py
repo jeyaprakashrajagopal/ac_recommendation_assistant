@@ -42,39 +42,7 @@ class IntentClarityAndConfirmation:
         tool_response = self.__chat_model.get_session_response(
             tools=self.tools, tool_choice=self.tools_choice
         )
-        tool_call = (
-            tool_response[0]["tool_calls"][0]
-            if isinstance(tool_response[0], dict)
-            else tool_response[0].tool_calls[0]
-        )
-
-        # Access function
-        func = (
-            tool_call["function"] if isinstance(tool_call, dict) else tool_call.function
-        )
-
-        # Get arguments JSON
-        arguments_json = func["arguments"] if isinstance(func, dict) else func.arguments
-        # Parse only if it's a string
-        if isinstance(arguments_json, str):
-            arguments_json = json.loads(arguments_json)
-
-        for key, value in arguments_json.items():
-            self.__user_requirements_dictionary[key] = value
-
-        # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
-        self.__chat_model.add_message(
-            role="assistant", tool_calls=tool_response[0]["tool_calls"]
-        )
-        self.__chat_model.add_message(
-            role="tool",
-            tool_call_id=tool_response[0]["id"],
-            content=json.dumps(tool_response[0]["content"]),
-        )
-        self.__chat_model.add_message(
-            role="assistant",
-            content=f"Current collected requirements are: {self.__user_requirements_dictionary} and please convert it to values if all features are collected as specified to meet the expectations.",
-        )
+        self.__handle_tool_response(tool_response)
         # Making use of tools to extract user primary features of the product from user's input
         response = self.__chat_model.get_session_response()
         intent_confirmation = self.__intent_confirmation(response[0])
@@ -115,3 +83,38 @@ class IntentClarityAndConfirmation:
 
     def clear_messages(self):
         self.__chat_model.clear_messages()
+
+    def __handle_tool_response(self, tool_response):
+        tool_call = (
+            tool_response[0]["tool_calls"][0]
+            if isinstance(tool_response[0], dict)
+            else tool_response[0].tool_calls[0]
+        )
+
+        # Access function
+        func = (
+            tool_call["function"] if isinstance(tool_call, dict) else tool_call.function
+        )
+
+        # Get arguments JSON
+        arguments_json = func["arguments"] if isinstance(func, dict) else func.arguments
+        # Parse only if it's a string
+        if isinstance(arguments_json, str):
+            arguments_json = json.loads(arguments_json)
+
+        for key, value in arguments_json.items():
+            self.__user_requirements_dictionary[key] = value
+
+        # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
+        self.__chat_model.add_message(
+            role="assistant", tool_calls=tool_response[0]["tool_calls"]
+        )
+        self.__chat_model.add_message(
+            role="tool",
+            tool_call_id=tool_response[0]["id"],
+            content=json.dumps(tool_response[0]["content"]),
+        )
+        self.__chat_model.add_message(
+            role="assistant",
+            content=f"Current collected requirements are: {self.__user_requirements_dictionary} and please convert it to values if all features are collected as specified to meet the expectations.",
+        )

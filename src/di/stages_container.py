@@ -11,13 +11,15 @@ from src.utils.templating import (load_dictionary_from_md,
 
 
 class StagesContainer:
-    def __init__(self, moderation_model, chat_model):
+    def __init__(
+        self, moderation_model, shared_chat_model, stage2_chat_model, stage3_chat_model
+    ):
         stage0_system_message = load_system_message_without_params(
             STAGE0_SYSTEM_MESSAGE
         )
         self.stage0 = providers.Factory(
             IntializeConversation,
-            chat_model=chat_model,
+            chat_model=shared_chat_model,
             system_message=stage0_system_message,
         )
 
@@ -32,7 +34,7 @@ class StagesContainer:
 
         self.stage1 = providers.Factory(
             IntentClarityAndConfirmation,
-            chat_model=chat_model,
+            chat_model=shared_chat_model,
             system_message=stage1_system_message,
             extract_dict_system_message=extract_dict_system_message,
             tools=stage1_tools,
@@ -44,7 +46,7 @@ class StagesContainer:
         )
         self.stage2 = providers.Factory(
             ProductExtractionAndMapping,
-            chat_model=chat_model,
+            chat_model=stage2_chat_model,
             system_message=stage2_system_message,
         )
 
@@ -53,7 +55,7 @@ class StagesContainer:
         )
         self.stage3 = providers.Factory(
             ProductRecommendations,
-            chat_model=chat_model,
+            chat_model=stage3_chat_model,
             system_message=stage3_system_message,
         )
 

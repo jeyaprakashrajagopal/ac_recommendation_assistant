@@ -27,7 +27,7 @@ class Pipeline:
         self.__ERROR_MESSAGE = "This conversation ends now since your input has some sensitive content. Please start the new conversation to continue!"
 
     def run_stage0(self) -> StageZeroResult:
-        self.__stage0.add_message(role="system", content=self.__stage0.system_message)
+        self.__stage1.add_message(role="system", content=self.__stage0.system_message)
 
         # for message in self.__stage0.examples:
         #    self.__stage0.add_message(

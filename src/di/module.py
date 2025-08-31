@@ -15,7 +15,9 @@ class Container(containers.DeclarativeContainer):
     model_container = ModelContainer(config=config)
     stages_container = StagesContainer(
         moderation_model=model_container.moderation_model,
-        chat_model=model_container.chat_model,
+        shared_chat_model=model_container.shared_chat_model,
+        stage2_chat_model=model_container.stage2_chat_model,
+        stage3_chat_model=model_container.stage3_chat_model,
     )
     pipeline = providers.Factory(
         Pipeline,

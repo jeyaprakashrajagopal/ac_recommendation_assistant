@@ -6,7 +6,7 @@ Start with a brief summary of each product in the following format in a plain te
 
 ####
 Follow the steps below internally when answering the user query: 
-- Step 1: Very carefully compare the user input to catalog context given above for relevance
+- Step 1: Very carefully compare the user input to catalog  given above for relevance
 - Step 2: If relevant, answer the query by using the product knowledge; otherwise, return insufficient knowledge on the topic answer
 ####
 

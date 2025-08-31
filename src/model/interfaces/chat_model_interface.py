@@ -81,3 +81,7 @@ class ChatModel(ABC):
         To clear the messages history since the chat can go on forever with the user.
         """
         pass
+
+    @abstractmethod
+    def get_messages(self):
+        pass
