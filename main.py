@@ -24,7 +24,7 @@ conversation.append({"assistant": initialize_conversation()})
 @app.route("/")
 def default_func():
     global conversation, top_products
-    return render_template("index_invite.html", conversations=conversation)
+    return render_template("index_chat.html", conversations=conversation)
 
 
 @app.route("/end_conv", methods=["POST"])
@@ -38,8 +38,8 @@ def end_conv():
     return redirect(url_for("default_func"))
 
 
-@app.route("/invite", methods=["POST", "GET"])
-def invite():
+@app.route("/chat", methods=["POST", "GET"])
+def chat():
     global conversation, top_products
     user_input = request.form["user_input_message"]
     conversation.append({"user": user_input})
