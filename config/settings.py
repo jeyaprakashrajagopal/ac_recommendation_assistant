@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 PKG_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_DATASET_PATH = PKG_ROOT / "data" / "static" / "ac_data_only_top_5.csv"
+DEFAULT_DATASET_PATH = PKG_ROOT / "data" / "static" / "ac_data_only_top_30.csv"
 DATASET_PATH = Path(os.getenv("SHOPASSIST_DATASET_PATH", DEFAULT_DATASET_PATH))
 
 STAGE0_SYSTEM_MESSAGE = PKG_ROOT / "src" / "prompts" / "stage0" / "system_message.md"
