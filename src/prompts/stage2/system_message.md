@@ -19,19 +19,19 @@ Thought 3: Classify each value {{"cooling capacity": "Cooling capacity depends o
 - premium: << Requires inverter with 5 star with high ISEER >>
 
 **comfort**
-- essential: << Any type is allowed >> 
-- standard: << Typical split/window okay >>
-- premium: << Prefer indoor less than or equal to 38dB; avoid portable where possible >>
+- essential: << Any indoor noise level is acceptable; no noise constraint applied. This tier prioritizes availability over comfort. >> 
+- standard: << Quieter home ranges while excluding the louder end of window/portable units. >>
+- premium: << Prefer indoor less than or equal to 38dB; this expects quiet indoor experiences and favours split or quietest window units  >>
 
 **portability**
-- essential: << Any type allowed >> 
-- standard: << Allow Split if installation feasible, else Window >>
-- premium: << Prioritize Portable or Window (no outdoor unit) >>
+- essential: << Any fixed or movable type is allowed >> 
+- standard: << Allow Split if installation feasible, else Window which are semi portable >>
+- premium: << Prioritize easily portable units with no outdoor unit Portable or Window (no outdoor unit). If portability is high priority, prefer portable, if noise matters too prefer window. >>
 
 **ac type**
 - essential: << any type allowed >>
 - standard: << allow Split if installation feasible, else Window >>
-- premium: << prioritize Portable or Window (no outdoor unit)>>
+- premium: << prioritize no-outdoor-unit designs Portable or Window (no outdoor unit) enables easy relocation; choose window over portable when quiet operation is priority.>>
 
 **smart features**
 - essential: << Any type allowed here >>

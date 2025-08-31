@@ -6,10 +6,8 @@ from src.stages.stage0_initialize_conversation import IntializeConversation
 from src.stages.stage1_intent_confirmation import IntentClarityAndConfirmation
 from src.stages.stage2_product_extraction import ProductExtractionAndMapping
 from src.stages.stage3_product_recommendation import ProductRecommendations
-from src.utils.templating import (
-    load_dictionary_from_md,
-    load_system_message_without_params,
-)
+from src.utils.templating import (load_dictionary_from_md,
+                                  load_system_message_without_params)
 
 
 class StagesContainer:

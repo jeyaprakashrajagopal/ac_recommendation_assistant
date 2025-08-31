@@ -1,10 +1,8 @@
 from unittest.mock import call, create_autospec
 
 from src.model.interfaces.chat_model_interface import ChatModel
-from src.stages.stage2_product_extraction import (
-    ProductExtractionAndMapping,
-    StageTwoResult,
-)
+from src.stages.stage2_product_extraction import (ProductExtractionAndMapping,
+                                                  StageTwoResult)
 
 
 def test_stage_2_calls_intent_confirmation_with_expected_messages():

@@ -3,9 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from src.stages.stage1_intent_confirmation import (
-    IntentClarityAndConfirmation,
-    StageOneResult,
-)
+    IntentClarityAndConfirmation, StageOneResult)
 
 
 @pytest.fixture
@@ -53,6 +51,7 @@ def test_stage1_intent_confirmation_produces_user_requirements(
     assert result.intent_confirmation == "Yes"
     assert result.response == ""
     assert result.user_requirements == extracted_dict
+
 
 def test_stage1_with_no_intent_confirmation(
     intent_clarity_and_confirmation, mock_chat_model

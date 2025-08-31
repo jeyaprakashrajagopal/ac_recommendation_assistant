@@ -1,10 +1,8 @@
 from unittest.mock import call, create_autospec
 
 from src.model.interfaces.chat_model_interface import ChatModel
-from src.stages.stage3_product_recommendation import (
-    ProductRecommendations,
-    StageThreeResult,
-)
+from src.stages.stage3_product_recommendation import (ProductRecommendations,
+                                                      StageThreeResult)
 
 
 def test_stage_3_calls_intent_confirmation_with_expected_messages():

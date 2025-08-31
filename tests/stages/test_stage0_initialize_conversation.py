@@ -1,10 +1,8 @@
 from unittest.mock import call, create_autospec
 
 from src.model.interfaces.chat_model_interface import ChatModel
-from src.stages.stage0_initialize_conversation import (
-    IntializeConversation,
-    StageZeroResult,
-)
+from src.stages.stage0_initialize_conversation import (IntializeConversation,
+                                                       StageZeroResult)
 
 
 def test_stage_0_calls_initialize_conversation_with_expected_messages():

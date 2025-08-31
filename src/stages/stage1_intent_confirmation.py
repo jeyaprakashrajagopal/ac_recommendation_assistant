@@ -26,6 +26,16 @@ class IntentClarityAndConfirmation:
         self.__extract_dict_system_message = extract_dict_system_message
         self.tools = tools
         self.tools_choice = tools_choice
+        self.__initial_requirements = {
+            "price": "-",
+            "energy efficiency": "-",
+            "cooling capacity": "-",
+            "comfort": "-",
+            "ac type": "-",
+            "smart features": "-",
+            "portability": "-",
+        }
+        self.__user_requirements_dictionary = self.__initial_requirements
 
     def run(self) -> StageOneResult:
         # Making use of tools to extract user primary features of the product from user's input
@@ -33,6 +43,10 @@ class IntentClarityAndConfirmation:
             tools=self.tools, tool_choice=self.tools_choice
         )
         # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
+        arguments = json.loads(tool_response[0]["tool_calls"][0].function.arguments)
+        for key, value in arguments.items():
+            self.__user_requirements_dictionary[key] = value
+
         self.__chat_model.add_message(
             role="assistant", tool_calls=tool_response[0]["tool_calls"]
         )
@@ -41,7 +55,10 @@ class IntentClarityAndConfirmation:
             tool_call_id=tool_response[0]["id"],
             content=json.dumps(tool_response[0]["content"]),
         )
-
+        self.__chat_model.add_message(
+            role="assistant",
+            content=f"Current collected requirements are: {self.__user_requirements_dictionary} and please convert it to values if all features are collected as specified to meet the expectations.",
+        )
         # Making use of tools to extract user primary features of the product from user's input
         response = self.__chat_model.get_session_response()
         intent_confirmation = self.__intent_confirmation(response[0])
@@ -49,6 +66,7 @@ class IntentClarityAndConfirmation:
         user_requirement_dict = {}
         if intent_confirmation[0].lower() == "yes":
             user_requirement_dict = self.__extract_dict_from_string(response[0])
+            self.__user_requirements_dictionary = self.__initial_requirements
 
         return StageOneResult(
             intent_confirmation=intent_confirmation[0],
