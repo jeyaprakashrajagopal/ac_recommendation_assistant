@@ -42,8 +42,6 @@ class IntentClarityAndConfirmation:
         tool_response = self.__chat_model.get_session_response(
             tools=self.tools, tool_choice=self.tools_choice
         )
-        # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
-        # arguments = json.loads(tool_response[0]["tool_calls"][0].function.arguments)
         tool_call = (
             tool_response[0]["tool_calls"][0]
             if isinstance(tool_response[0], dict)
@@ -64,6 +62,7 @@ class IntentClarityAndConfirmation:
         for key, value in arguments_json.items():
             self.__user_requirements_dictionary[key] = value
 
+        # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
         self.__chat_model.add_message(
             role="assistant", tool_calls=tool_response[0]["tool_calls"]
         )
