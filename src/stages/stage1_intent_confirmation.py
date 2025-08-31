@@ -43,8 +43,25 @@ class IntentClarityAndConfirmation:
             tools=self.tools, tool_choice=self.tools_choice
         )
         # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
-        arguments = json.loads(tool_response[0]["tool_calls"][0].function.arguments)
-        for key, value in arguments.items():
+        # arguments = json.loads(tool_response[0]["tool_calls"][0].function.arguments)
+        tool_call = (
+            tool_response[0]["tool_calls"][0]
+            if isinstance(tool_response[0], dict)
+            else tool_response[0].tool_calls[0]
+        )
+
+        # Access function
+        func = (
+            tool_call["function"] if isinstance(tool_call, dict) else tool_call.function
+        )
+
+        # Get arguments JSON
+        arguments_json = func["arguments"] if isinstance(func, dict) else func.arguments
+        # Parse only if it's a string
+        if isinstance(arguments_json, str):
+            arguments_json = json.loads(arguments_json)
+
+        for key, value in arguments_json.items():
             self.__user_requirements_dictionary[key] = value
 
         self.__chat_model.add_message(

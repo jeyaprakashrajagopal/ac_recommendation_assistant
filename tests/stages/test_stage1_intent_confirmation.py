@@ -27,7 +27,7 @@ def test_stage1_intent_confirmation_produces_user_requirements(
 ):
     tool_response = [
         {
-            "tool_calls": [{"type": "test_tool"}],
+            "tool_calls": [{"type": "test_tool", "function": {"arguments": {}}}],
             "id": "tool_id_1",
             "content": {"feature": "value"},
         }
@@ -58,7 +58,7 @@ def test_stage1_with_no_intent_confirmation(
 ):
     tool_response = [
         {
-            "tool_calls": [{"type": "test_tool"}],
+            "tool_calls": [{"type": "test_tool", "function": {"arguments": {}}}],
             "id": "tool_id_1",
             "content": {"feature": "value"},
         }
