@@ -26,7 +26,7 @@ def test_stage_2_calls_intent_confirmation_with_expected_messages():
 
     actual = stage_2.run(
         user_requirement={
-            "price": 45000,
+            "price": "45000",
             "cooling capacity": "standard",
             "energy efficiency": "premium",
             "comfort": "essential",

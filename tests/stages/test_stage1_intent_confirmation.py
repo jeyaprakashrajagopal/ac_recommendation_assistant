@@ -15,7 +15,8 @@ def mock_chat_model():
 def intent_clarity_and_confirmation(mock_chat_model):
     return IntentClarityAndConfirmation(
         chat_model=mock_chat_model,
-        system_message="System: {model_response}",
+        extract_value_system_message="System message",
+        intent_confirmation_system_message="System: {model_response}",
         extract_dict_system_message="Extract dict system message",
         tools={"tool1": "desc"},
         tools_choice={"tool1": "testing"},
