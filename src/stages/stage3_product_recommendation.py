@@ -24,7 +24,6 @@ class ProductRecommendations:
 
     def add_message(self, role, content):
         self.__chat_model.add_message(role, content)
-        print(self.__chat_model.get_messages())
 
     def clear_messages(self):
         self.__chat_model.clear_messages()

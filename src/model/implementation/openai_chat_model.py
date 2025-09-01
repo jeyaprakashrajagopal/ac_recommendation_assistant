@@ -77,7 +77,6 @@ class OpenAIChatModel(ChatModel):
             params["tool_choice"] = tool_choice
 
         response = self.__client.chat.completions.create(**params)
-        print(response)
 
         if json_format == True:
             return json.loads(response.choices[0].message.content)

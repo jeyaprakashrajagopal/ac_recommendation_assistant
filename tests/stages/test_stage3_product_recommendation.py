@@ -17,5 +17,4 @@ def test_stage_3_calls_intent_confirmation_with_expected_messages():
     )
 
     actual = stage_3.run()
-    print(actual)
     assert actual == fake_response
