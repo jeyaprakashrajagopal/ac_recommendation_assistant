@@ -4,7 +4,7 @@ Your objective is to collect the primary feature values from the tool output and
 
 ####
 Here you can find the instructions on how to collect and fill the values based on user requirements:
-- Infer the requirements from tools response and then convert it into one of the values ["essential", "standard", "premium"], strictly no extra text
+- Infer the requirements from tools response, strictly no extra text
 - Give a brief and interesting summary about the filled requirements before asking the follow-up questions and please avoid repetitions
 - Except price that can contain a numerical value, other keys are supposed to be filled with the above mentioned values in\
     {"price": "-", "cooling capacity": "-", "energy efficiency": "-", "comfort": "-", "portability": "-", "ac type": "-", "smart features": "-"} based on user"s input
