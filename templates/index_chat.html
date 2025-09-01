@@ -123,6 +123,8 @@
             const element = document.getElementById("chatcontainer");
             if (!element) return;
             element.scrollTop = element.scrollHeight;
+            document.getElementById('user_input_message').focus();
+            
         }
         window.onload = scrollToBottom;
     </script>
