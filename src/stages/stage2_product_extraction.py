@@ -19,7 +19,10 @@ class ProductExtractionAndMapping:
         self.df = pd.read_csv(DATASET_PATH)
 
     def run(self, user_requirement: dict) -> StageTwoResult:
-        filtered_df = self.df[self.df["price"] <= int(user_requirement["price"])]
+        filtered_df = self.df[
+            self.df["price"]
+            <= int(round(float(user_requirement["price"].strip().replace(",", ""))))
+        ]
         filtered_df["ac_features"] = filtered_df["description"].apply(
             lambda description: self.__product_map_layer(description=description)
         )
@@ -31,6 +34,7 @@ class ProductExtractionAndMapping:
 
         top_products = filtered_df.sort_values("scores", ascending=False).head(3)
         top_products = top_products[top_products["scores"] >= 2]
+        top_products.sort_values("price", ascending=False, inplace=True)
         top_products.drop(columns=["scores", "ac_features"], axis=1, inplace=True)
 
         return StageTwoResult(recommendations=top_products.to_json(orient="records"))
