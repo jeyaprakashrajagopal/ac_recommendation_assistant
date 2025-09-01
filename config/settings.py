@@ -11,7 +11,12 @@ STAGE0_SYSTEM_MESSAGE = PKG_ROOT / "src" / "prompts" / "stage0" / "system_messag
 
 STAGE1_TOOLS = PKG_ROOT / "src" / "prompts" / "stage1" / "tools.md"
 STAGE1_TOOLS_CHOICE = PKG_ROOT / "src" / "prompts" / "stage1" / "tools_choice.md"
-STAGE1_SYSTEM_MESSAGE = PKG_ROOT / "src" / "prompts" / "stage1" / "system_message.md"
+STAGE1_SYSTEM_MESSAGE = (
+    PKG_ROOT / "src" / "prompts" / "stage1" / "intent_confirmation_system_message.md"
+)
+STAGE1_EXTRACT_VALUES_SYSTEM_MESSAGE = (
+    PKG_ROOT / "src" / "prompts" / "stage1" / "extract_values_system_message.md"
+)
 EXTRACT_DICT_SYS_MSG = (
     PKG_ROOT / "src" / "prompts" / "stage1" / "extract_dictionary_system_message.md"
 )

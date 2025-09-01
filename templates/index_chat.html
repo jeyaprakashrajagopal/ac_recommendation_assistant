@@ -1,48 +1,130 @@
+<!doctype html>
 <html>
-    <head>
-        <title>
-            AC Recommendation Assistant!
-        </title>
+  <head>
+    <meta charset="utf-8" />
+    <title>AC Recommendation Assistant</title>
         <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
-    </head>
-    <body>
-        <div class="outercontainer">
-            <div class="center"> 
-                <h1 id="titlestyle" >
-                    AC Recommendation Assistant!
-                </h1>
-            </div>
-            <div class="conversationcontainer" id="chatcontainer">
-                <div>
-                    <h2>
-                        {% for entry in conversations %}
-                        <div class="{% if entry.assistant %}bot{% else %}user{% endif %}">
-                            {% if entry.assistant %}
-                                {{ entry.assistant }}
-                            {% else %}
-                                {{ entry.user }} 
-                            {% endif %}
-                        </div>
-                        {% endfor %}
-                    </h2>
-                </div>
-            </div>
-            <form action="/chat" method="POST" class="center">
-                <input type="text" name="user_input_message" id="inputtextbox">
-                <input type="image" value= "" id="submitbutton"> 
-            </form>
-            <form action="/end_conv" method="POST" class="center">
-                <button type="submit" id="end">END CONVERSATION</button> 
-            </form>
-        </div>
+  </head>
+  <body>
+    <div class="outercontainer">
+      <div class="center"> 
+          <h1 id="titlestyle" >
+              AC Recommendation Assistant!
+          </h1>
+      </div>
+      <div class="conversationcontainer" id="chatcontainer">
+          <!-- Optional server-rendered history (non-stream view) -->
+          {% if conversations %}
+          <div id="history">
+              {% for item in conversations %}
+              {% if item.user %}
+                  <div class="user">{{ item.user }}</div>
+              {% elif item.assistant %}
+                  <div class="assistant">{{ item.assistant }}</div>
+              {% endif %}
+              {% endfor %}
+          </div>
+          {% endif %}
+          <div id="chat">
+          </div>
+      </div>
+      <form id="chat-form" method="POST" action="/chat_stream" class="center">
+        <input name="user_input_message" id="user_input_message" autocomplete="off" placeholder="Type your message..." />
+        <input type="image" value="" id="submitbutton">
+        <div id="loader" class="mainloader" hidden="true"></div>
+      </form>
+
+      <form id="end-form" method="POST" action="/end_conv" class="center">
+        <button type="submit" id="end">End Conversation</button>
+      </form>
+    </div>
     <script>
+        const chat = document.getElementById('chat');
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('user_input_message');
+        const submitbutton = document.getElementById('submitbutton');
+
+        function showLoader() { 
+          input.disabled = true;
+          submitbutton.hidden = true;
+          loader.style.display = 'block'; 
+        }
+        function hideLoader() { 
+          input.disabled = false;
+          submitbutton.hidden = false;
+          loader.style.display = 'none'; 
+        }
+
+        function append(role, text) {
+          const div = document.createElement('div');
+          div.className = role;
+          div.textContent = text;
+          chat.appendChild(div);
+          requestAnimationFrame(scrollToBottom);
+          chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Minimal SSE parser for fetch streams
+        async function streamPost(url, formData) {
+          const res = await fetch(url, { method: 'POST', body: formData });
+          if (!res.ok) {
+            append('assistant', 'Error: ' + res.status);
+            return;
+          }
+          showLoader();
+
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+
+            let idx;
+            while ((idx = buffer.indexOf("\n\n")) !== -1) {
+              const raw = buffer.slice(0, idx);
+              buffer = buffer.slice(idx + 2);
+
+              let event = 'message';
+              let data = '';
+              for (const line of raw.split("\n")) {
+                if (line.startsWith('event:')) event = line.slice(6).trim();
+                else if (line.startsWith('data:')) data += line.slice(5).trim();
+              }
+
+              if (event === 'message') {
+                try {
+                  const msg = JSON.parse(data);
+                  append(msg.role, msg.text);
+                } catch (e) {
+                  append('assistant', 'Parse error');
+                }
+              } else if (event === 'end') {
+                hideLoader();
+                return;
+              }
+            }
+          }
+        }
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const text = input.value.trim();
+          if (!text) return;
+
+          const fd = new FormData(form);
+          streamPost('/chat_stream', fd);
+          input.value = '';
+          input.focus();
+        });
+
         function scrollToBottom() {
-            var element = document.getElementById("chatcontainer");
+            const element = document.getElementById("chatcontainer");
+            if (!element) return;
             element.scrollTop = element.scrollHeight;
-            var inputtextbox = document.getElementById("inputtextbox");
-            inputtextbox.focus();
         }
         window.onload = scrollToBottom;
     </script>
-    </body>
+  </body>
 </html>

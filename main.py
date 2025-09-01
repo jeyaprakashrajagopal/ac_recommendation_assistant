@@ -1,24 +1,26 @@
-from flask import Flask, redirect, render_template, request, url_for
+import json
+
+from flask import (Flask, Response, redirect, render_template, request,
+                   stream_with_context, url_for)
 
 from src.di.module import Container
 from src.utils.ModerationException import ModerationException
 
 app = Flask(__name__)
-
 container = Container()
 container.openai_config().load_openai_key()
 application = container.application()
 
 
 def initialize_conversation() -> str:
+    # Run Initialize conversation
     initial_conversation = application.pipeline.run_stage0()
-
-    return initial_conversation.response[0]
+    return initial_conversation.response
 
 
 conversation = []
 top_products = None
-conversation.append({"assistant": initialize_conversation()})
+conversation.append({"assistant": initialize_conversation()[0]})
 
 
 @app.route("/")
@@ -33,65 +35,90 @@ def end_conv():
     conversation = []
     top_products = None
     application.pipeline.clear_messages()
-    conversation.append({"assistant": initialize_conversation()})
-
+    conversation.append({"assistant": initialize_conversation()[0]})
     return redirect(url_for("default_func"))
 
 
-@app.route("/chat", methods=["POST", "GET"])
-def chat():
+@app.route("/chat_stream", methods=["POST"])
+def chat_stream():
     global conversation, top_products
     user_input = request.form["user_input_message"]
     conversation.append({"user": user_input})
 
-    try:
-        if user_input == "exit":
-            print("See you next time!. Please feel free to connect anytime!")
-            return redirect(url_for("end_conv"))
+    @stream_with_context
+    def generate():
+        global top_products
 
-        if top_products == None:
-            stage1_response = application.pipeline.run_stage1(user_input=user_input)
+        def send(role, text, event="message"):
+            payload = json.dumps({"role": role, "text": text})
+            return f"event:{event}\ndata:{payload}\n\n"
 
-            if stage1_response.intent_confirmation.strip().lower() == "yes":
-                # stage 2
-                stage_2_response = application.pipeline.run_stage2(
-                    user_requirement=stage1_response.user_requirements
+        yield send("user", user_input)
+
+        try:
+            if user_input.strip().lower() == "exit":
+                yield send(
+                    "assistant",
+                    "See you next time!. Please feel free to connect anytime!",
                 )
-                top_products = stage_2_response.recommendations
-                if len(top_products) == 0:
-                    conversation.append(
-                        {
-                            "assistant": "Sorry we do not have AC's that match your requirements. Connecting you to a human expert."
-                        }
+                yield "event:end\ndata:{}\n\n"
+                return
+
+            if top_products is None:
+                # Run Stage 1
+                stage1 = application.pipeline.run_stage1(user_input=user_input)
+
+                if stage1.intent_confirmation.strip().lower() == "yes":
+                    stage2 = application.pipeline.run_stage2(
+                        user_requirement=stage1.user_requirements
+                    )
+                    conversation.append({"assistant": stage1.response})
+
+                    # Handle empty recommendataions
+                    if not stage2.recommendations:
+                        yield send(
+                            "assistant",
+                            "Sorry we do not have AC's that match your requirements. Connecting you to a human expert.",
+                        )
+                        yield "event:end\ndata:{}\n\n"
+                        return
+
+                    # Run Stage 3 with an initial conversation
+                    stage3_response = application.pipeline.run_stage3(
+                        recommendations=stage2.recommendations
                     )
 
-                # stage 3 initializing conversation
-                stage3_response = application.pipeline.run_stage3(
-                    recommendations=stage_2_response.recommendations
-                )
-                conversation.append({"assistant": "\n".join(stage3_response.response)})
+                    conversation.append(
+                        {"assistant": "\n".join(stage3_response.response)}
+                    )
+                    top_products = stage2.recommendations
+                    yield send("assistant", "\n".join(stage3_response.response))
+                else:
+                    conversation.append({"assistant": stage1.response})
+                    yield send("assistant", stage1.response)
+
             else:
-                conversation.append({"assistant": stage1_response.response})
+                # Continue running Stage 3 to resume helping the customer
+                stage3_continue_response = application.pipeline.continue_stage3(
+                    user_input
+                )
+                first = stage3_continue_response.response
+                yield send("assistant", first)
+                conversation.append({"assistant": first})
 
-        else:
-            # stage 3 continue conversation
-            stage3_response = application.pipeline.continue_stage3(user_input)
-            conversation.append({"assistant": stage3_response.response[0]})
+        except ModerationException as te:
+            yield send("assistant", te.message)
+        except Exception as e:
+            yield send("assistant", str(e))
 
-    except ModerationException as te:
-        print(te)
-        conversation.append({"assistant": te.message})
-        return redirect(url_for("end_conv"))
-    except Exception as e:
-        print(e)
-        conversation.append({"assistant": e})
-        return redirect(url_for("end_conv"))
+        # To finish the stream
+        yield "event:end\ndata:{}\n\n"
 
-    return redirect(url_for("default_func"))
+    return Response(generate(), mimetype="text/event-stream")
 
 
 def main():
-    app.run()
+    app.run(debug=True, threaded=True)
 
 
 if __name__ == "__main__":

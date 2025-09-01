@@ -26,6 +26,9 @@ class StagesContainer:
         stage1_system_message = load_system_message_without_params(
             STAGE1_SYSTEM_MESSAGE
         )
+        stage1_extract_values_system_message = load_system_message_without_params(
+            STAGE1_EXTRACT_VALUES_SYSTEM_MESSAGE
+        )
         extract_dict_system_message = load_system_message_without_params(
             EXTRACT_DICT_SYS_MSG
         )
@@ -35,7 +38,8 @@ class StagesContainer:
         self.stage1 = providers.Factory(
             IntentClarityAndConfirmation,
             chat_model=shared_chat_model,
-            system_message=stage1_system_message,
+            extract_value_system_message=stage1_extract_values_system_message,
+            intent_confirmation_system_message=stage1_system_message,
             extract_dict_system_message=extract_dict_system_message,
             tools=stage1_tools,
             tools_choice=stage1_tools_choice,
