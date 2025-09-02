@@ -5,7 +5,9 @@ class Moderation(ABC):
     @abstractmethod
     def get_response(self, input_message) -> bool:
         """
-        :param str input_message: moderation check on the given message
-        :return: returns True if there is a sensitive content
+        Invokes OpenAI moderation check API and returns either the message is flagged or not.
+
+        :param str input_message: Input message under check.
+        :return bool: returns True if there is a sensitive/violent content, otherwise False
         """
         pass
