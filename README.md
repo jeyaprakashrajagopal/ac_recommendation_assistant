@@ -59,7 +59,7 @@ The application starts from **`main.py`**, which initializes and executes the fl
 ├── data/ # static datasets\
 ├── pyproject.toml # Project metadata and the dependencies\
 ├── src\
-│   ├── application.py # Application file where the pipeline is injected and it serves as the base class of the project\
+│   ├── application.py # Application file where the pipeline is injected and it serves as the base class\
 │   ├── di # Dependency injection modules\
 │   ├── model # model interfaces & implementation\
 │   ├── pipeline # Orchestrates the workflow of the project\
