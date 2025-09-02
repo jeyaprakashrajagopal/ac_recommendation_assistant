@@ -30,7 +30,7 @@ uv run main.py
 ```
 python -m pytest
 ```
-#### Entry Point
+## Entry Point
 The application starts from **`main.py`**, which initializes and executes the flash app.
 ### Execution Flow
 
@@ -52,7 +52,7 @@ The application starts from **`main.py`**, which initializes and executes the fl
 6. **Utilities (`src/utils`)**
     - Common helper functions used in the project.
 
-### Project structure
+## Project structure
 .
 ├── main.py # Application entry point
 ├── config # Global settings (file paths)
