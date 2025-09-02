@@ -26,23 +26,25 @@ class StagesContainer:
         stage1_system_message = load_system_message_without_params(
             STAGE1_SYSTEM_MESSAGE
         )
-        stage1_extract_values_system_message = load_system_message_without_params(
-            STAGE1_EXTRACT_VALUES_SYSTEM_MESSAGE
+        stage1_classify_values_system_message = load_system_message_without_params(
+            STAGE1_CLASSIFY_VALUES_SYSTEM_MESSAGE
         )
         extract_dict_system_message = load_system_message_without_params(
             EXTRACT_DICT_SYS_MSG
         )
-        stage1_tools = load_dictionary_from_md(STAGE1_TOOLS)
-        stage1_tools_choice = load_dictionary_from_md(STAGE1_TOOLS_CHOICE)
+        stage1_function_tool = load_dictionary_from_md(STAGE1_FUNCTION_TOOL)
+        stage1_function_tool_choice = load_dictionary_from_md(
+            STAGE1_FUNCTION_TOOL_CHOICE
+        )
 
         self.stage1 = providers.Factory(
             IntentClarityAndConfirmation,
             chat_model=shared_chat_model,
-            extract_value_system_message=stage1_extract_values_system_message,
+            classify_values_system_message=stage1_classify_values_system_message,
             intent_confirmation_system_message=stage1_system_message,
             extract_dict_system_message=extract_dict_system_message,
-            tools=stage1_tools,
-            tools_choice=stage1_tools_choice,
+            function_tool=stage1_function_tool,
+            function_tool_choice=stage1_function_tool_choice,
         )
 
         stage2_system_message = load_system_message_without_params(

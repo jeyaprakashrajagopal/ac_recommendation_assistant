@@ -7,7 +7,7 @@ from src.model.interfaces.chat_model_interface import ChatModel
 
 @dataclass
 class StageOneResult:
-    intent_confirmation: str  # yes or no
+    intent_confirmation: str  # Yes or No response
     response: str
     user_requirements: Dict
 
@@ -16,18 +16,18 @@ class IntentClarityAndConfirmation:
     def __init__(
         self,
         chat_model: ChatModel,
-        extract_value_system_message: str,
+        classify_values_system_message: str,
         intent_confirmation_system_message: str,
         extract_dict_system_message: str,
-        tools: Dict,
-        tools_choice: Dict,
+        function_tool: Dict,
+        function_tool_choice: Dict,
     ):
         self.__chat_model = chat_model
-        self.__extract_value_system_message = extract_value_system_message
+        self.__classify_values_system_message = classify_values_system_message
         self.__intent_confirmation_system_message = intent_confirmation_system_message
         self.__extract_dict_system_message = extract_dict_system_message
-        self.tools = tools
-        self.tools_choice = tools_choice
+        self.__function_tool = function_tool
+        self.__function_tool_choice = function_tool_choice
         self.__initial_requirements = {
             "price": "-",
             "energy efficiency": "-",
@@ -42,12 +42,12 @@ class IntentClarityAndConfirmation:
     def run(self) -> StageOneResult:
         # Making use of tools to extract user primary features of the product from user's input
         tool_response = self.__chat_model.get_session_response(
-            tools=self.tools, tool_choice=self.tools_choice
+            tools=self.__function_tool, tool_choice=self.__function_tool_choice
         )
         self.__handle_tool_response(tool_response)
         self.__chat_model.add_message(
             role="assistant",
-            content=self.__extract_value_system_message.format(
+            content=self.__classify_values_system_message.format(
                 json.dumps(self.__user_requirements_dictionary)
             ),
         )
@@ -102,7 +102,7 @@ class IntentClarityAndConfirmation:
             else tool_response[0].tool_calls[0]
         )
 
-        # Access function
+        # Access function, It can be accessed directly with .function.arguments here, but converted to json for testing purposes
         func = (
             tool_call["function"] if isinstance(tool_call, dict) else tool_call.function
         )
@@ -116,7 +116,7 @@ class IntentClarityAndConfirmation:
         for key, value in arguments_json.items():
             self.__user_requirements_dictionary[key] = value
 
-        # Appending tools message from last api call before appending the tool response itself, otherwise it won't be allowed as per openai rules
+        # Appending tools message from last api call before appending the tool response itself, otherwise LLM wouldn't understand the tool execution
         self.__chat_model.add_message(
             role="assistant", tool_calls=tool_response[0]["tool_calls"]
         )

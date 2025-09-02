@@ -33,7 +33,7 @@ class ProductExtractionAndMapping:
         )
 
         top_products = filtered_df.sort_values("scores", ascending=False).head(3)
-        top_products = top_products[top_products["scores"] >= 2]
+        top_products = top_products[top_products["scores"] > 3]
         top_products.sort_values("price", ascending=False, inplace=True)
         top_products.drop(columns=["scores", "ac_features"], axis=1, inplace=True)
 
