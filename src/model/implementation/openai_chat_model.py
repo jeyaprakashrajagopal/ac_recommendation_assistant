@@ -26,34 +26,6 @@ class OpenAIChatModel(ChatModel):
         self.__messages = []
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
-    def preview_response(
-        self, messages: List[Dict], json_format=False, json_schema=None
-    ) -> List[str | Dict]:
-        if len(messages) == 0:
-            raise Exception("Please add a message to start with the conversation!")
-
-        params = {
-            "model": self.__model,
-            "n": self.__no_of_choices,
-            "max_tokens": self.__max_tokens,
-            "temperature": self.__temperature,
-            "messages": messages,
-            "seed": self.__seed,
-        }
-
-        if json_format:
-            params["response_format"] = {"type": "json_object"}
-        elif json_schema is not None:
-            params["response_format"] = json_schema
-
-        response = self.__client.chat.completions.create(**params)
-
-        if json_format == True:
-            return json.loads(response.choices[0].message.content)
-        else:
-            return [choice.message.content for choice in response.choices]
-
-    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
     def get_session_response(
         self, json_format=False, json_schema=None, tools=None, tool_choice: Dict = None
     ) -> List[str]:
@@ -81,7 +53,50 @@ class OpenAIChatModel(ChatModel):
         if json_format == True:
             return json.loads(response.choices[0].message.content)
         else:
-            return self.__return_tools_result(response=response)
+            return self.__parse_response(response=response)
+
+    @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
+    def preview_response(
+        self, messages: List[Dict], json_format=False, json_schema=None
+    ) -> List[str | Dict]:
+        if len(messages) == 0:
+            raise Exception("Please add a message to start with the conversation!")
+
+        params = {
+            "model": self.__model,
+            "n": self.__no_of_choices,
+            "max_tokens": self.__max_tokens,
+            "temperature": self.__temperature,
+            "messages": messages,
+            "seed": self.__seed,
+        }
+
+        if json_format:
+            params["response_format"] = {"type": "json_object"}
+        elif json_schema is not None:
+            params["response_format"] = json_schema
+
+        response = self.__client.chat.completions.create(**params)
+
+        if json_format == True:
+            return json.loads(response.choices[0].message.content)
+        else:
+            return [choice.message.content for choice in response.choices]
+    
+    def update_parameters(
+        self,
+        max_tokens: int = 100,
+        model: str = "gpt-3.5-turbo",
+        no_of_choices: int = 1,
+        temperature: float = 0,
+        seed=None,
+    ) -> None:
+        self.__max_tokens = max_tokens
+        self.__model = model
+        self.__no_of_choices = no_of_choices
+        self.__temperature = temperature
+        self.__seed = seed
+
 
     def add_message(
         self,
@@ -102,30 +117,16 @@ class OpenAIChatModel(ChatModel):
 
         self.__messages.append(message)
 
-    def add_chat_completion_message(self, message) -> None:
-        self.__messages.append(message)
-
     def clear_messages(self):
         self.__messages = []
 
-    def get_messages(self):
-        return self.__messages
+    def __parse_response(self, response) -> List:
+        """
+        This method extracts the necessary information from a normal or tools response for further processing.
 
-    def update_parameters(
-        self,
-        max_tokens: int = 100,
-        model: str = "gpt-3.5-turbo",
-        no_of_choices: int = 1,
-        temperature: float = 0,
-        seed=None,
-    ) -> None:
-        self.__max_tokens = max_tokens
-        self.__model = model
-        self.__no_of_choices = no_of_choices
-        self.__temperature = temperature
-        self.__seed = seed
-
-    def __return_tools_result(self, response):
+        :param List[Dict] response: Dictionary that can contain a normal or tools response.
+        :return List[Dict|str]: Parses into List[Dict] for tools response, and List[str] for normal response.
+        """
         results = []
         for choice in response.choices:
             if choice.message.tool_calls:

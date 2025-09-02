@@ -20,7 +20,7 @@ def load_system_message(template_path: str, **params):
 
 def load_system_message_without_params(template_path: str):
     """
-    Reads the markdown template and renders it.
+    Reads the markdown template and renders it without any paramete.
 
     :param template_path str: Path of the MD file
     """
@@ -30,7 +30,7 @@ def load_system_message_without_params(template_path: str):
 
 def load_dictionary_from_md(template_path: str):
     """
-    Reads the markdown template and renders it.
+    Reads the markdown template and renders the dictionary.
 
     :param template_path str: Path of the MD file
     """
