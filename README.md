@@ -53,21 +53,22 @@ The application starts from **`main.py`**, which initializes and executes the fl
     - Common helper functions used in the project.
 
 ### Project structure
-config/ # Global settings (file paths)
-data/static # static datasets
-src/
-    di/# Dependency injection modules
-    model/ # model interfaces & implementation
-    pipeline/ # Orchestrator
-    prompts/ # Prompts as markdown files
-    stages/ # Implementation of all stages in pipeline
-    utils/ # Shared utilities
-static/ # Static image files
-static/css/ # Stylesheets
-templates/ # HTML template files
-tests/ # Unit tests
-tests/stages # Unit tests specific for all stages of the pipeline
-main.py # Application entry point
-pyproject.toml # Project metadata and the dependencies
-.env # To keep all the secret keys in environment for safety purposes, openai key is stored in this project
-.gitignore # Files to be ignored during git push
+.
+├── main.py # Application entry point
+├── config # Global settings (file paths)
+├── data/ # static datasets
+├── pyproject.toml # Project metadata and the dependencies
+├── src
+│   ├── application.py # Application file where the pipeline is injected and it serves as the base class of the project
+│   ├── di # Dependency injection modules
+│   ├── model # model interfaces & implementation
+│   ├── pipeline # Orchestrates the workflow of the project
+│   │   └── pipeline.py
+│   ├── prompts # Prompts as markdown files
+│   ├── stages # Implementation of all stages in pipeline
+│   └── utils # Shared utilities
+├── static
+│   ├── css # Static image files
+├── templates # HTML template files
+├── tests # Unit tests
+│   └── stages # Unit tests specific for all stages of the pipeline
