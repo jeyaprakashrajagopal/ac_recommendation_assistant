@@ -7,7 +7,7 @@ It is a very time-consuming and difficult process to select an air conditioner b
 ### Dependencies
 * This project has been developed in VSCode with an uv project manager tool. It also includes dependencies such as `Flask`, `pandas`, `dependency_injector`, `openai`, `python-dotenv`, `tenacity` and `pytest`. All the dependencies can be found in `pyproject.toml` file in the main directory.
 
-### Execution
+### Setup and Execution
 This section provides the setup and execution
 * Navigate to the main project directory.
 * Create .env file and add the following with your own secret key instead of `sk_`
@@ -30,8 +30,9 @@ uv run main.py
 ```
 python -m pytest
 ```
-## Entry Point
+### Entry Point
 The application starts from **`main.py`**, which initializes and executes the flash app.
+
 ### Execution Flow
 
 1. **`main.py`**
@@ -41,7 +42,7 @@ The application starts from **`main.py`**, which initializes and executes the fl
 2. **Dependency Injection `src/di`**
     - Wires together models, pipeline, and stages.
     - Ensures modules are loosely coupled and testable.
-3. **Pipeline**
+3. **Pipeline `src/pipeline`**
     - Orchestrates the complete workflow of the project.
     - Makes use of different **stages** from `src/stages` to process the data.
 4. **Models (`src/model`)**
