@@ -13,15 +13,14 @@
           </h1>
       </div>
       <div class="conversationcontainer" id="chatcontainer">
-          <!-- Optional server-rendered history (non-stream view) -->
           {% if conversations %}
           <div id="history">
               {% for item in conversations %}
-              {% if item.user %}
-                  <div class="user">{{ item.user }}</div>
-              {% elif item.assistant %}
-                  <div class="assistant">{{ item.assistant }}</div>
-              {% endif %}
+                {% if item.user %}
+                    <div class="user">{{ item.user }}</div>
+                {% elif item.assistant %}
+                    <div class="assistant">{{ item.assistant }}</div>
+                {% endif %}
               {% endfor %}
           </div>
           {% endif %}
@@ -60,61 +59,70 @@
           div.className = role;
           div.textContent = text;
           chat.appendChild(div);
+          // Scrolls down to the bottom of the chat window whenever message an element gets added
           requestAnimationFrame(scrollToBottom);
           chat.scrollTop = chat.scrollHeight;
         }
 
-        // Minimal SSE parser for fetch streams
         async function streamPost(url, formData) {
-          const res = await fetch(url, { method: 'POST', body: formData });
-          if (!res.ok) {
-            append('assistant', 'Error: ' + res.status);
+          // sending form via HTTP and parses the streaming response here
+          const response = await fetch(url, { method: 'POST', body: formData });
+          if (!response.ok) {
+            append('assistant', 'Error status: ' + response.status);
             return;
           }
           showLoader();
-
-          const reader = res.body.getReader();
+          
+          const reader = response.body.getReader();
           const decoder = new TextDecoder();
           let buffer = '';
+          // Reading raw byte chunks from network
           while (true) {
             const { value, done } = await reader.read();
             if (done) break;
             buffer += decoder.decode(value, { stream: true });
 
-            let idx;
-            while ((idx = buffer.indexOf("\n\n")) !== -1) {
-              const raw = buffer.slice(0, idx);
-              buffer = buffer.slice(idx + 2);
+            let index;
+            // Splits raw chunks into expected event frames until read is done
+            while ((index = buffer.indexOf("\n\n")) !== -1) {
+              const raw = buffer.slice(0, index);
+              buffer = buffer.slice(index + 2);
 
               let event = 'message';
               let data = '';
               for (const line of raw.split("\n")) {
-                if (line.startsWith('event:')) event = line.slice(6).trim();
-                else if (line.startsWith('data:')) data += line.slice(5).trim();
+                if (line.startsWith('event:')) {
+                  event = line.slice(6).trim();
+                }
+                else if (line.startsWith('data:')) {
+                  data += line.slice(5).trim();
+                }
               }
 
               if (event === 'message') {
                 try {
-                  const msg = JSON.parse(data);
-                  append(msg.role, msg.text);
-                } catch (e) {
-                  append('assistant', 'Parse error');
+                  // Appends data (creates div elements) after parsing it
+                  const message = JSON.parse(data);
+                  append(message.role, message.text);
+                } catch (error) {
+                  hideLoader();
+                  append('assistant', 'Message parsing error');
                 }
-              } else if (event === 'end') {
+              } else if (event === 'end') { // It is necessary to check if server sends event:end to terminate this loop
                 hideLoader();
                 return;
               }
             }
           }
         }
-
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
+        // Listener is added to triggers streaming loop that reads Server Sent Events when form submission occurs
+        form.addEventListener('submit', (error) => {
+          error.preventDefault();
           const text = input.value.trim();
           if (!text) return;
 
-          const fd = new FormData(form);
-          streamPost('/chat_stream', fd);
+          const formData = new FormData(form);
+          streamPost('/chat_stream', formData);
           input.value = '';
           input.focus();
         });
@@ -124,7 +132,6 @@
             if (!element) return;
             element.scrollTop = element.scrollHeight;
             document.getElementById('user_input_message').focus();
-            
         }
         window.onload = scrollToBottom;
     </script>

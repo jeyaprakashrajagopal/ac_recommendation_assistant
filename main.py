@@ -56,14 +56,6 @@ def chat_stream():
         yield send("user", user_input)
 
         try:
-            if user_input.strip().lower() == "exit":
-                yield send(
-                    "assistant",
-                    "See you next time!. Please feel free to connect anytime!",
-                )
-                yield "event:end\ndata:{}\n\n"
-                return
-
             if top_products is None:
                 # Run Stage 1
                 stage1 = application.pipeline.run_stage1(user_input=user_input)
@@ -96,15 +88,14 @@ def chat_stream():
                 else:
                     conversation.append({"assistant": stage1.response})
                     yield send("assistant", stage1.response)
-
             else:
                 # Continue running Stage 3 to resume helping the customer
                 stage3_continue_response = application.pipeline.continue_stage3(
                     user_input
                 )
-                first = stage3_continue_response.response
-                yield send("assistant", first)
-                conversation.append({"assistant": first})
+                response = stage3_continue_response.response
+                yield send("assistant", response)
+                conversation.append({"assistant": response})
 
         except ModerationException as te:
             yield send("assistant", te.message)
