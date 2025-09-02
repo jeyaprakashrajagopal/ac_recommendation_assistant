@@ -53,7 +53,7 @@ The application starts from **`main.py`**, which initializes and executes the fl
     - Common helper functions used in the project.
 
 ## Project structure
-.
+
 ├── main.py # Application entry point\
 ├── config # Global settings (file paths)\
 ├── data/ # static datasets\
