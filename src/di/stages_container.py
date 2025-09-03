@@ -11,6 +11,7 @@ from src.utils.templating import (load_dictionary_from_md,
 
 
 class StagesContainer:
+    """ Invoking Factory to create instances of the stages, separate instances created and chat models are injected here """
     def __init__(
         self, moderation_model, shared_chat_model, stage2_chat_model, stage3_chat_model
     ):

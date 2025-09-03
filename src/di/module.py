@@ -8,6 +8,11 @@ from src.pipeline.pipeline import Pipeline
 
 
 class Container(containers.DeclarativeContainer):
+    """
+    Main DI container that is responsible for connecting both model and stages here.
+
+    Application class gets created created and the pipeline is injected to access it in the main file.
+    """
     config = providers.Configuration()
 
     openai_config = providers.Singleton(OpenAIConfig)
