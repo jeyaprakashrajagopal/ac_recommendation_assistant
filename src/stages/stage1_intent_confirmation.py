@@ -50,14 +50,14 @@ class IntentClarityAndConfirmation:
         5. Intent confirmation layer, outputs "Yes" if all requirements are collected otherwise "No" and clarification continues
         6. If intent is confirmed extacts the final user requirements dictionary from the string.
         7. Returns the stage one result for both intent confirmation "Yes" and for "No"
-        
+
         :param StageOneResult: Returns the stage one result with the user requirements dictionary upon intent confirmation.
         """
         # 1). Invoking the function calling API all to extract requirements from users input
         tool_response = self.__chat_model.get_session_response(
             tools=self.__function_tool, tool_choice=self.__function_tool_choice
         )
-        
+
         # 2). Handling the tools response by extracting and adding the tool messages to model's conversation history
         self.__handle_tool_response(tool_response)
 
@@ -125,8 +125,10 @@ class IntentClarityAndConfirmation:
         ]
 
         # 2). Returns one time API call to get the features dictionary
-        response_dict = self.__chat_model.preview_response(messages=messages, json_format=True)
-        
+        response_dict = self.__chat_model.preview_response(
+            messages=messages, json_format=True
+        )
+
         return response_dict
 
     def __handle_tool_response(self, tool_response):
