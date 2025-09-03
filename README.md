@@ -5,7 +5,7 @@ It is a very time-consuming and difficult process to select an air conditioner b
 
 ## Getting Started
 ### Dependencies
-* This project has been developed in VSCode with an uv project manager tool. It also includes dependencies such as `Flask`, `pandas`, `dependency_injector`, `openai`, `python-dotenv`, `tenacity` and `pytest`. All the dependencies can be found in `pyproject.toml` file in the main directory.
+* This project has been developed in VSCode with an uv project manager tool. It also includes dependencies such as `Flask`, `pandas`, `dependency_injector`, `openai`, `python-dotenv`, `tenacity` and `pytest`. For file formating `black` package is used and `isort` is used to organize the headers and clean it up. All the dependencies can be found in `pyproject.toml` file in the main directory.
 
 ### Setup and Execution
 This section provides the setup and execution
