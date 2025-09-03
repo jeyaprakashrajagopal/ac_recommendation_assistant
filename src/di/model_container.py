@@ -5,7 +5,8 @@ from src.model.implementation.openai_chat_model import OpenAIChatModel
 
 
 class ModelContainer:
-    """ Invoking Factory to create instances of the ChatModel, Moderation classes """
+    """Invoking Factory to create instances of the ChatModel, Moderation classes"""
+
     def __init__(self, config):
         __DEFAULT_MODEL = "gpt-4o-mini"
         __MAX_TOKENS = 500

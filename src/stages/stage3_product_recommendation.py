@@ -21,7 +21,7 @@ class ProductRecommendations:
         :return StageThreeResult: Data class that contains the recommendations
         """
         recommendation = self.__chat_model.get_session_response()
-        
+
         return StageThreeResult(response=recommendation)
 
     def continue_run(self) -> StageThreeResult:

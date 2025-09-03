@@ -13,6 +13,7 @@ class Container(containers.DeclarativeContainer):
 
     Application class gets created created and the pipeline is injected to access it in the main file.
     """
+
     config = providers.Configuration()
 
     openai_config = providers.Singleton(OpenAIConfig)

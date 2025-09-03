@@ -112,7 +112,7 @@ class Pipeline:
         4. Add recommendations and assistant's response in previous step to message history
 
         :param Dict: User's input message
-        :return StageOneResult: Returns stage 1 result with the user requirements dictionary.
+        :return StageThreeResult: Returns stage 1 result with the user requirements dictionary.
         :raises ModerationException: Throws the custom exception
         """
         # 1). Appending user requirements to system message and add it to message history
@@ -163,7 +163,7 @@ class Pipeline:
         # 5). Add assistant message to message history
         self.__stage3.add_message("assistant", "\n".join(response_str))
 
-        return StageThreeResult(response.response)
+        return response
 
     def __moderation_check(self, data):
         """
