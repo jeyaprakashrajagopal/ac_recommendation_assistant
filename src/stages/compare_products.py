@@ -2,6 +2,14 @@ from typing import Dict
 
 
 def compare_products(user_requirements: Dict, from_dataset: Dict) -> int:
+    """
+    This method compares the dataset row and the user's requirements dictionary
+    by mapping categorical values, then computes the final correspondence score.
+
+    :param Dict user_requirements: Dictionary that contains the actual user requirements
+    :param Dict from_dataset: Extracted featues dictionary from the actual dataset (one sample/row)
+    :return int: Returns the final score after the comparison
+    """
     mapping = {"essential": 0, "standard": 1, "premium": 2}
 
     score = 0

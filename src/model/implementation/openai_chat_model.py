@@ -82,7 +82,7 @@ class OpenAIChatModel(ChatModel):
             return json.loads(response.choices[0].message.content)
         else:
             return [choice.message.content for choice in response.choices]
-    
+
     def update_parameters(
         self,
         max_tokens: int = 100,
@@ -96,7 +96,6 @@ class OpenAIChatModel(ChatModel):
         self.__no_of_choices = no_of_choices
         self.__temperature = temperature
         self.__seed = seed
-
 
     def add_message(
         self,
