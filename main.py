@@ -99,8 +99,12 @@ def chat_stream():
 
         except ModerationException as te:
             yield send("assistant", te.message)
+            yield "event:block\ndata:{}\n\n"
+            return
         except Exception as e:
             yield send("assistant", str(e))
+            yield "event:block\ndata:{}\n\n"
+            return
 
         # To finish the stream
         yield "event:end\ndata:{}\n\n"
