@@ -16,7 +16,7 @@ class ProductRecommendations:
 
     def run(self) -> StageThreeResult:
         """
-        This method actually runs the final stage of the pipeling
+        This method actually runs the final stage of the pipeline
 
         :return StageThreeResult: Data class that contains the recommendations
         """
